@@ -6,11 +6,14 @@ const getRandomPath = () => {
   return paths[~~(Math.random() * paths.length)];
 };
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 export class Client {
-  constructor(url, sendStatistics, sendRequest) {
+  constructor(url, sendStatistics, sendRequest, pauseBetweenBatchesMs) {
     this.url = url;
     this.sendStatistics = sendStatistics;
     this.sendRequest = sendRequest;
+    this.pauseBetweenBatchesMs = pauseBetweenBatchesMs;
   }
 
   async run(min, max) {
@@ -21,6 +24,7 @@ export class Client {
       const stat = this.getStat(res, new Date().getTime() - startTime);
       this.sendStatistics({ ...stat, i });
       i++;
+      this.pauseBetweenBatchesMs > 0 && await sleep(this.pauseBetweenBatchesMs);
       // if (stat.failed / stat.total > 0.1) return;
     }
   }

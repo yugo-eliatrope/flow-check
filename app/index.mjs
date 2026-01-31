@@ -94,7 +94,8 @@ const main = async () => {
     const client = new Client(
       config.target,
       (data) => sendToPrimary({ type: 'stats', data: JSON.stringify({ ...data, workerId: cluster.worker.id }) }),
-      httpClient.sendRequest
+      httpClient.sendRequest,
+      config.delayBetweenBatchesMs,
     );
     client.run(config.minCountOfReqsInBatch, config.maxCountOfReqsInBatch)
       .catch((err) => {
