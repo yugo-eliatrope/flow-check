@@ -42,7 +42,7 @@ const main = async () => {
       msgsBuffer = [];
       console.log(
         '\x1b[32m%s\x1b[0m',
-        `\nStat for minute: ${total} req/min, avg speed: ${(total / 60).toFixed(2)} req/sec, failed reqs: ${failed}, avg delay: ${Math.round(totalDelay / total)}ms, max delay: ${longestDelay}ms`,
+        `\nStat for minute: ${total} req/min, avg speed: ${(total / 60).toFixed(2)} req/sec, failed reqs: ${failed}, avg delay: ${Math.round(totalDelay / total)}ms, max delay: ${longestDelay}ms\n`,
       );
       globalCounter.total += total;
       globalCounter.failed += failed;
