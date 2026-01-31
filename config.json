@@ -1,0 +1,9 @@
+{
+  "target": "https://example.com",
+  "maxSockets": 2048,
+  "maxFreeSockets": 512,
+  "maxCPUcount": 8,
+  "minCountOfReqsInBatch": 5,
+  "maxCountOfReqsInBatch": 80,
+  "delayBetweenBatchesMs": 1000
+}

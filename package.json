@@ -1,0 +1,11 @@
+{
+  "name": "flow-check",
+  "version": "1.0.0",
+  "description": "App to perform load testing on websites",
+  "main": "app/index.mjs",
+  "scripts": {
+    "start": "node app/index.mjs"
+  },
+  "author": "Yugo l'Eliatrope",
+  "license": "ISC"
+}
