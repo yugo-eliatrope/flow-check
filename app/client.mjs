@@ -40,10 +40,14 @@ export class Client {
     let successful = 0;
     let longestDelay = 0;
     let totalDelay = 0;
+    let totalRender = 0;
+    let totalCache = 0;
     for (let i = 0; i < total; ++i) {
       if (res[i].status === 'fulfilled') {
         successful++;
         totalDelay += res[i].value.delay;
+        if (res[i].value.renderTime !== -1) totalRender += res[i].value.renderTime;
+        if (res[i].value.cacheTime !== -1) totalCache += res[i].value.cacheTime;
         if (longestDelay < res[i].value.delay) longestDelay = res[i].value.delay;
       } else {
         console.error(res[i]);
@@ -51,6 +55,6 @@ export class Client {
         if (longestDelay < res[i].reason.delay) longestDelay = res[i].reason.delay;
       }
     }
-    return { total, reqPerSec, successful, failed: total - successful, longestDelay, totalDelay };
+    return { total, reqPerSec, successful, failed: total - successful, longestDelay, totalDelay, totalRender, totalCache };
   }
 }

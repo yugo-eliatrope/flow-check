@@ -16,6 +16,7 @@ const main = async () => {
     console.log('\nUSING CONFIG:', configPath);
     console.log('TARGET HOST:', config.target);
     console.log('WORKERS COUNT:', numCPUs, '\n');
+    console.log(`Started at: ${t1.toISOString()}`);
 
     for (let i = 0; i < numCPUs; i++) {
       cluster.fork({ config: JSON.stringify(config) });
@@ -24,7 +25,10 @@ const main = async () => {
     let msgsBuffer = [];
     const globalCounter = {
       failed: 0,
-      total: 0
+      total: 0,
+      delay: 0,
+      render: 0,
+      cache: 0
     };
     const period = 60_000;
 
@@ -33,10 +37,14 @@ const main = async () => {
       let failed = 0;
       let longestDelay = 0;
       let totalDelay = 0;
+      let totalRender = 0;
+      let totalCache = 0;
       for (let i = 0; i < msgsBuffer.length; ++i) {
         total += msgsBuffer[i].total;
         failed += msgsBuffer[i].failed;
         totalDelay += msgsBuffer[i].totalDelay;
+        totalRender += msgsBuffer[i].totalRender;
+        totalCache += msgsBuffer[i].totalCache;
         if (longestDelay < msgsBuffer[i].longestDelay) longestDelay = msgsBuffer[i].longestDelay;
       }
       msgsBuffer = [];
@@ -46,6 +54,9 @@ const main = async () => {
       );
       globalCounter.total += total;
       globalCounter.failed += failed;
+      globalCounter.delay += totalDelay;
+      globalCounter.render += totalRender;
+      globalCounter.cache += totalCache;
     }
 
     const interval = setInterval(getMinStat, period);
@@ -72,6 +83,9 @@ const main = async () => {
             console.log(`Finished at: ${t2.toISOString()}`);
             console.log(`Time passed: ${minPassed.toFixed(2)} mins.`);
             console.log(`Avg speed:   ${(globalCounter.total / minPassed).toFixed(1)} req/min`);
+            console.log(`Avg delay:   ${Math.round(globalCounter.delay / globalCounter.total)} ms`);
+            console.log(`Avg render:  ${Math.round(globalCounter.render / globalCounter.total)} ms`);
+            console.log(`All cache:   ${globalCounter.cache} ms`);
             console.log('All workers completed. Main process is stopping...');
             process.exit(0);
           }
